@@ -28,29 +28,39 @@ $app = Application::configure(basePath: dirname(__DIR__))
         });
     })->create();
 
-if (getenv('VERCEL')) {
+// Check for Vercel environment (getenv or $_ENV)
+if (getenv('VERCEL') || isset($_ENV['VERCEL'])) {
     $storagePath = '/tmp/storage';
+    $bootstrapPath = '/tmp/bootstrap';
+
     $app->useStoragePath($storagePath);
+    $app->useBootstrapPath($bootstrapPath);
 
-    // Clear stale config cache if it exists in the writable path
-    $filesToClear = [
-        $storagePath . '/framework/cache/config.php',
-        $storagePath . '/framework/cache/services.php',
-        $storagePath . '/framework/cache/packages.php',
-        $storagePath . '/framework/routes.php'
-    ];
-    foreach ($filesToClear as $file) {
-        if (file_exists($file)) {
-            @unlink($file);
-        }
-    }
-
+    // Create necessary directories
     if (!is_dir($storagePath)) {
         mkdir($storagePath, 0777, true);
         mkdir($storagePath . '/framework/views', 0777, true);
         mkdir($storagePath . '/framework/cache', 0777, true);
         mkdir($storagePath . '/framework/sessions', 0777, true);
         mkdir($storagePath . '/logs', 0777, true);
+    }
+
+    if (!is_dir($bootstrapPath)) {
+        mkdir($bootstrapPath, 0777, true);
+        mkdir($bootstrapPath . '/cache', 0777, true);
+    }
+    
+    // Clear stale cache files in /tmp to prevent collisions
+    $filesToClear = [
+        $bootstrapPath . '/cache/config.php',
+        $bootstrapPath . '/cache/services.php',
+        $bootstrapPath . '/cache/packages.php',
+        $storagePath . '/framework/routes.php'
+    ];
+    foreach ($filesToClear as $file) {
+        if (file_exists($file)) {
+            @unlink($file);
+        }
     }
 }
 
