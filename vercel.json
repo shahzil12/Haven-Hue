@@ -1,18 +1,24 @@
 {
     "version": 2,
+    "framework": null,
     "functions": {
-    "api/**/*.php": {
-      "runtime": "vercel-php@0.7.2"
-    }
+        "api/**/*.php": {
+            "runtime": "vercel-php@0.7.2"
+        }
     },
     "routes": [
         {
-            "src": "/(css|js|images|favicon.ico)(.*)",
+            "src": "/(css|js|images|storage|favicon.ico)(.*)",
             "dest": "/public/$1$2"
         },
         {
             "src": "/(.*)",
             "dest": "/api/index.php"
         }
+    ],
+    "exclude": [
+        "node_modules",
+        "vendor",
+        ".git"
     ]
 }
