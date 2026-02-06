@@ -7,6 +7,16 @@ error_reporting(E_ALL);
 echo "<div style='font-family: monospace; padding: 20px;'>";
 echo "<h1>Vercel Laravel Boot Debugger</h1>";
 
+// Manually clear cache before anything else
+$storagePath = '/tmp/storage';
+if (is_dir($storagePath . '/framework/cache')) {
+    $files = glob($storagePath . '/framework/cache/*.php');
+    foreach ($files as $file) {
+        @unlink($file);
+    }
+    echo "<p style='color:blue'>[Debug] Cleared /tmp config cache manually.</p>";
+}
+
 try {
     echo "<p><strong>Step 1:</strong> Checking vendor/autoload.php... ";
     if (!file_exists(__DIR__ . '/../vendor/autoload.php')) {

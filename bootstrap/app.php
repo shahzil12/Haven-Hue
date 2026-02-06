@@ -17,7 +17,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (Throwable $e) {
-            if (getenv('VERCEL')) {
+            if (true) {
                 // Bypass View rendering to avoid "Target class [view] does not exist"
                 // during error handling.
                 echo "<h1>Primary Exception (Raw Output)</h1>";
