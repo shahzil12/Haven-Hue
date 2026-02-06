@@ -65,6 +65,11 @@ if ($isVercel) {
             copy($sourceDb, $dbPath);
         } else {
             touch($dbPath);
+            // Auto-migrate the fresh database so tables exist
+            // This prevents "no such table" errors on Vercel
+            // We must silence stdout to prevent header errors
+            $console = new \Symfony\Component\Console\Output\BufferedOutput();
+            $app->make(\Illuminate\Contracts\Console\Kernel::class)->call('migrate', ['--force' => true], $console);
         }
     }
     
