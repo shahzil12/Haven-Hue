@@ -16,7 +16,16 @@ $app = Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (Throwable $e) {
+            if (getenv('VERCEL')) {
+                // Bypass View rendering to avoid "Target class [view] does not exist"
+                // during error handling.
+                echo "<h1>Primary Exception (Raw Output)</h1>";
+                echo "<p><strong>Message:</strong> " . $e->getMessage() . "</p>";
+                echo "<pre>" . $e->getTraceAsString() . "</pre>";
+                exit; // Stop execution
+            }
+        });
     })->create();
 
 if (getenv('VERCEL')) {
@@ -24,9 +33,16 @@ if (getenv('VERCEL')) {
     $app->useStoragePath($storagePath);
 
     // Clear stale config cache if it exists in the writable path
-    $configCache = $storagePath . '/framework/cache/config.php';
-    if (file_exists($configCache)) {
-        @unlink($configCache);
+    $filesToClear = [
+        $storagePath . '/framework/cache/config.php',
+        $storagePath . '/framework/cache/services.php',
+        $storagePath . '/framework/cache/packages.php',
+        $storagePath . '/framework/routes.php'
+    ];
+    foreach ($filesToClear as $file) {
+        if (file_exists($file)) {
+            @unlink($file);
+        }
     }
 
     if (!is_dir($storagePath)) {
