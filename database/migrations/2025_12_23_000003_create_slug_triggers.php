@@ -7,6 +7,9 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (DB::getDriverName() === 'sqlite') {
+            return;
+        }
         DB::unprepared('
             CREATE TRIGGER before_insert_categories
             BEFORE INSERT ON categories
