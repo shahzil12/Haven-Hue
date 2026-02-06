@@ -66,9 +66,14 @@ if ($isVercel) {
     // Check if configuration is already loaded, if not set env var
     $_ENV['DB_DATABASE'] = $dbPath;
     putenv("DB_DATABASE={$dbPath}");
-    
-    // Also try to update the config if the app is already built (though this runs before providers)
-    // We'll rely on env vars which config/database.php uses
+
+    // Force non-database drivers for Vercel to avoid "table not found" errors
+    // since we can't run migrations on the ephemeral SQLite DB.
+    $_ENV['SESSION_DRIVER'] = 'cookie';
+    putenv('SESSION_DRIVER=cookie');
+
+    $_ENV['CACHE_STORE'] = 'array';
+    putenv('CACHE_STORE=array');
 }
 
 return $app;
