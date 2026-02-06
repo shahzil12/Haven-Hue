@@ -14,22 +14,14 @@ $app = Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\EnsureUserRole::class,
         ]);
-    })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->render(function (Throwable $e) {
-            if (true) {
-                // Bypass View rendering to avoid "Target class [view] does not exist"
-                // during error handling.
-                echo "<h1>Primary Exception (Raw Output)</h1>";
-                echo "<p><strong>Message:</strong> " . $e->getMessage() . "</p>";
-                echo "<pre>" . $e->getTraceAsString() . "</pre>";
-                exit; // Stop execution
-            }
-        });
+        //
     })->create();
 
-// Check for Vercel environment (getenv or $_ENV)
-if (getenv('VERCEL') || isset($_ENV['VERCEL'])) {
+// Robust Vercel Environment Check
+$isVercel = isset($_ENV['VERCEL']) || getenv('VERCEL') || isset($_SERVER['VERCEL']);
+
+if ($isVercel) {
     $storagePath = '/tmp/storage';
     $bootstrapPath = '/tmp/bootstrap';
 
