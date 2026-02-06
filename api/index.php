@@ -1,3 +1,4 @@
+<?php
 // Standard Vercel Entry Point with Error Trapping
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
