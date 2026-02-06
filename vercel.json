@@ -15,10 +15,5 @@
             "src": "/(.*)",
             "dest": "/api/index.php"
         }
-    ],
-    "exclude": [
-        "node_modules",
-        "vendor",
-        ".git"
     ]
 }
