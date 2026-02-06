@@ -55,6 +55,20 @@ if ($isVercel) {
             @unlink($file);
         }
     }
+
+    // Set up a temporary SQLite database
+    $dbPath = $storagePath . '/database.sqlite';
+    if (!file_exists($dbPath)) {
+        touch($dbPath);
+    }
+    
+    // Override database configuration to use the temp file
+    // Check if configuration is already loaded, if not set env var
+    $_ENV['DB_DATABASE'] = $dbPath;
+    putenv("DB_DATABASE={$dbPath}");
+    
+    // Also try to update the config if the app is already built (though this runs before providers)
+    // We'll rely on env vars which config/database.php uses
 }
 
 return $app;
