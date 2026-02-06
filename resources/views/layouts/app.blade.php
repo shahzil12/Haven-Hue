@@ -26,7 +26,11 @@
                             <a class="nav-link" href="{{ route('home') }}">Home</a>
                         </li>
                         @php
-                            $adminExists = \App\Models\User::where('role', 'admin')->exists();
+                            try {
+                                $adminExists = \App\Models\User::where('role', 'admin')->exists();
+                            } catch (\Illuminate\Database\QueryException $e) {
+                                $adminExists = false;
+                            }
                         @endphp
                         @if(!$adminExists && Auth::check())
                              <li class="nav-item">
