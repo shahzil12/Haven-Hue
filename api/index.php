@@ -1,5 +1,4 @@
 <?php
-// Standard Vercel Entry Point with Error Trapping
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -7,7 +6,6 @@ error_reporting(E_ALL);
 try {
     require __DIR__ . '/../public/index.php';
 } catch (\Throwable $e) {
-    // Return 200 to ensure the browser displays the output
     http_response_code(200);
     header('Content-Type: text/html');
     echo "<div style='font-family: monospace; background: #f8d7da; padding: 20px; border: 2px solid #f5c6cb;'>";
