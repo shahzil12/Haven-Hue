@@ -23,6 +23,12 @@ if (getenv('VERCEL')) {
     $storagePath = '/tmp/storage';
     $app->useStoragePath($storagePath);
 
+    // Clear stale config cache if it exists in the writable path
+    $configCache = $storagePath . '/framework/cache/config.php';
+    if (file_exists($configCache)) {
+        @unlink($configCache);
+    }
+
     if (!is_dir($storagePath)) {
         mkdir($storagePath, 0777, true);
         mkdir($storagePath . '/framework/views', 0777, true);
