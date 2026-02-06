@@ -19,8 +19,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (\Illuminate\Support\Facades\App::environment('production') || getenv('VERCEL')) {
+        if (\Illuminate\Support\Facades\App::environment('production') || env('VERCEL')) {
             \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
+        if (env('VERCEL')) {
+            $dbPath = '/tmp/database.sqlite';
+            if (!file_exists($dbPath)) {
+                touch($dbPath);
+                \Illuminate\Support\Facades\Artisan::call('migrate --force');
+            }
         }
     }
 }
