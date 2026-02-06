@@ -58,8 +58,14 @@ if ($isVercel) {
 
     // Set up a temporary SQLite database
     $dbPath = $storagePath . '/database.sqlite';
+    $sourceDb = $app->basePath('database/database.sqlite');
+    
     if (!file_exists($dbPath)) {
-        touch($dbPath);
+        if (file_exists($sourceDb)) {
+            copy($sourceDb, $dbPath);
+        } else {
+            touch($dbPath);
+        }
     }
     
     // Override database configuration to use the temp file

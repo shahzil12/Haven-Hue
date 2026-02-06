@@ -11,8 +11,14 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $featuredProducts = Product::with('primaryImage', 'category')->latest()->take(8)->get();
-        $categories = Category::all();
+        try {
+            $featuredProducts = Product::with('primaryImage', 'category')->latest()->take(8)->get();
+            $categories = Category::all();
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Fallback for Vercel ephemeral DB (no tables)
+            $featuredProducts = collect();
+            $categories = collect();
+        }
         return view('buyer.home', compact('featuredProducts', 'categories'));
     }
 
