@@ -6,7 +6,7 @@
         <!-- Product Images -->
         <div class="col-md-6 mb-4">
             @if($product->primaryImage)
-                <img src="{{ asset('storage/' . $product->primaryImage->image_path) }}" class="img-fluid rounded shadow-sm mb-3 w-100" style="max-height: 500px; object-fit: cover;" alt="{{ $product->name }}">
+                <img src="{{ str_starts_with($product->primaryImage->image_path, 'data:') ? $product->primaryImage->image_path : asset('storage/' . $product->primaryImage->image_path) }}" class="img-fluid rounded shadow-sm mb-3 w-100" style="max-height: 500px; object-fit: cover;" alt="{{ $product->name }}">
             @else
                 <img src="https://placehold.co/600x600?text=No+Image" class="img-fluid rounded shadow-sm mb-3 w-100" alt="{{ $product->name }}">
             @endif
@@ -14,7 +14,7 @@
             <div class="row row-cols-4 g-2">
                 @foreach($product->images as $image)
                 <div class="col">
-                    <img src="{{ asset('storage/' . $image->image_path) }}" class="img-thumbnail" alt="{{ $product->name }}">
+                    <img src="{{ str_starts_with($image->image_path, 'data:') ? $image->image_path : asset('storage/' . $image->image_path) }}" class="img-thumbnail" alt="{{ $product->name }}">
                 </div>
                 @endforeach
             </div>
@@ -66,7 +66,7 @@
             @foreach($relatedProducts as $related)
             <div class="col">
                 <div class="card h-100 shadow-sm border-0">
-                    <img src="{{ $related->primaryImage ? asset('storage/' . $related->primaryImage->image_path) : 'https://placehold.co/300x300?text=No+Image' }}" class="card-img-top" alt="{{ $related->name }}" style="height: 200px; object-fit: cover;">
+                    <img src="{{ $related->primaryImage ? (str_starts_with($related->primaryImage->image_path, 'data:') ? $related->primaryImage->image_path : asset('storage/' . $related->primaryImage->image_path)) : 'https://placehold.co/300x300?text=No+Image' }}" class="card-img-top" alt="{{ $related->name }}" style="height: 200px; object-fit: cover;">
                     <div class="card-body">
                         <h6 class="card-title">{{ $related->name }}</h6>
                         <p class="card-text text-accent fw-bold">Rs. {{ $related->price }}</p>

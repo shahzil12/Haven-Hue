@@ -18,7 +18,7 @@
         @foreach($featuredProducts as $product)
         <div class="col">
             <div class="card h-100 shadow-sm border-0">
-                <img src="{{ $product->primaryImage ? asset('storage/' . $product->primaryImage->image_path) : 'https://placehold.co/300x300?text=No+Image' }}" class="card-img-top" alt="{{ $product->name }}" style="height: 250px; object-fit: cover;">
+                <img src="{{ $product->primaryImage ? (str_starts_with($product->primaryImage->image_path, 'data:') ? $product->primaryImage->image_path : asset('storage/' . $product->primaryImage->image_path)) : 'https://placehold.co/300x300?text=No+Image' }}" class="card-img-top" alt="{{ $product->name }}" style="height: 250px; object-fit: cover;">
                 <div class="card-body">
                     <h5 class="card-title text-dark">{{ $product->name }}</h5>
                     <p class="card-text text-muted small">{{ Str::limit($product->description, 50) }}</p>

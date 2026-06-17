@@ -47,10 +47,10 @@ class ProductController extends Controller
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $image) {
-                $path = $image->store('products', 'public');
+                $base64 = 'data:' . $image->getMimeType() . ';base64,' . base64_encode(file_get_contents($image->getRealPath()));
                 ProductImage::create([
                     'product_id' => $product->id,
-                    'image_path' => $path,
+                    'image_path' => $base64,
                     'is_primary' => $index === 0, //sets the first image uploaded as the main thumbnail for the product.
                 ]);
             }
@@ -87,10 +87,10 @@ class ProductController extends Controller
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                $path = $image->store('products', 'public');
+                $base64 = 'data:' . $image->getMimeType() . ';base64,' . base64_encode(file_get_contents($image->getRealPath()));
                 ProductImage::create([
                     'product_id' => $product->id,
-                    'image_path' => $path,
+                    'image_path' => $base64,
                     'is_primary' => false,   //Unlike the store method, new images uploaded during an update are set to is_primary => false by default
                 ]);
             }

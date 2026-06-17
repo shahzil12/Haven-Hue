@@ -24,7 +24,7 @@
             <tr>
                 <td>{{ $product->id }}</td>
                 <td>
-                    <img src="{{ $product->primaryImage ? asset('storage/' . $product->primaryImage->image_path) : 'https://placehold.co/50x50' }}" width="50" height="50" class="img-thumbnail">
+                    <img src="{{ $product->primaryImage ? (str_starts_with($product->primaryImage->image_path, 'data:') ? $product->primaryImage->image_path : asset('storage/' . $product->primaryImage->image_path)) : 'https://placehold.co/50x50' }}" width="50" height="50" class="img-thumbnail">
                 </td>
                 <td>{{ $product->name }}</td>
                 <td>{{ $product->category->name ?? 'N/A' }}</td>

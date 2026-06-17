@@ -30,7 +30,7 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             @if($item->product->primaryImage)
-                                                <img src="{{ asset('storage/' . $item->product->primaryImage->image_path) }}" alt="{{ $item->product->name }}" class="rounded me-3" width="50" height="50" style="object-fit: cover;">
+                                                <img src="{{ str_starts_with($item->product->primaryImage->image_path, 'data:') ? $item->product->primaryImage->image_path : asset('storage/' . $item->product->primaryImage->image_path) }}" alt="{{ $item->product->name }}" class="rounded me-3" width="50" height="50" style="object-fit: cover;">
                                             @else
                                                 <div class="rounded me-3 d-flex align-items-center justify-content-center bg-light text-muted" style="width: 50px; height: 50px;">
                                                     <i class="fas fa-image"></i>

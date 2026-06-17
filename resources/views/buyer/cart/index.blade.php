@@ -12,7 +12,7 @@
                     @foreach($cartItems as $item)
                     <div class="row mb-4 align-items-center">
                         <div class="col-md-2">
-                            <img src="{{ $item->product->primaryImage ? asset('storage/' . $item->product->primaryImage->image_path) : 'https://placehold.co/150x150?text=No+Image' }}" class="img-fluid rounded" alt="{{ $item->product->name }}">
+                             <img src="{{ $item->product->primaryImage ? (str_starts_with($item->product->primaryImage->image_path, 'data:') ? $item->product->primaryImage->image_path : asset('storage/' . $item->product->primaryImage->image_path)) : 'https://placehold.co/150x150?text=No+Image' }}" class="img-fluid rounded" alt="{{ $item->product->name }}">
                         </div>
                         <div class="col-md-4">
                             <h5 class="mb-1"><a href="{{ route('product.show', $item->product) }}" class="text-dark text-decoration-none">{{ $item->product->name }}</a></h5>
