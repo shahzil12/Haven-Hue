@@ -22,9 +22,7 @@ class Category extends Model
         });
 
         static::updating(function ($category) {
-            if (empty($category->slug)) {
-                $category->slug = \Illuminate\Support\Str::slug($category->name);
-            }
+            $category->slug = \Illuminate\Support\Str::slug($category->name);
         });
     }
 
