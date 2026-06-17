@@ -21,7 +21,6 @@ class AdminUserSeeder extends Seeder
                 'email' => 'admin@havenhue.com',
                 'password' => Hash::make('password'), // You can change this
                 'role' => 'admin',
-                'email_verified_at' => Carbon::now(),
             ]);
             $this->command->info('Admin user created successfully.');
         } else {
