@@ -65,11 +65,13 @@ if ($isVercel) {
         $sourceDb = $app->basePath('database/database.sqlite');
         
         $needSeeding = false;
-        if (!file_exists($dbPath)) {
+        if (!file_exists($dbPath) || (file_exists($sourceDb) && filesize($sourceDb) > 0 && (@filesize($dbPath) < filesize($sourceDb)))) {
             if (file_exists($sourceDb) && filesize($sourceDb) > 0) {
                 copy($sourceDb, $dbPath);
             } else {
-                touch($dbPath);
+                if (!file_exists($dbPath)) {
+                    touch($dbPath);
+                }
                 $needSeeding = true;
             }
         }
