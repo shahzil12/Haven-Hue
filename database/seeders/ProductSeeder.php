@@ -34,8 +34,7 @@ class ProductSeeder extends Seeder
                 'dimensions' => '30cm x 30cm x 12cm',
                 'stock' => 15,
                 'images' => [
-                    'https://images.unsplash.com/photo-1615873968403-89e068629265?auto=format&fit=crop&q=80&w=800',
-                    'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&q=80&w=800'
+                    'images/products/olive_wood_bowl_1788436044401.jpg'
                 ]
             ],
             [
@@ -47,8 +46,7 @@ class ProductSeeder extends Seeder
                 'dimensions' => 'Heights 15cm, 20cm, 25cm',
                 'stock' => 20,
                 'images' => [
-                    'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&q=80&w=800',
-                    'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&q=80&w=800'
+                    'images/products/sheesham_table_lamp_1788436111166.jpg'
                 ]
             ],
             [
@@ -60,7 +58,7 @@ class ProductSeeder extends Seeder
                 'dimensions' => '18cm x 16cm x 5cm',
                 'stock' => 25,
                 'images' => [
-                    'https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?auto=format&fit=crop&q=80&w=800'
+                    'images/products/oak_wall_mirror_1788435994394.jpg'
                 ]
             ],
 
@@ -74,8 +72,7 @@ class ProductSeeder extends Seeder
                 'dimensions' => '60cm Diameter x 3cm Depth',
                 'stock' => 10,
                 'images' => [
-                    'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&q=80&w=800',
-                    'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&q=80&w=800'
+                    'images/products/oak_wall_mirror_1788435994394.jpg'
                 ]
             ],
             [
@@ -87,7 +84,7 @@ class ProductSeeder extends Seeder
                 'dimensions' => '80cm x 50cm x 4cm',
                 'stock' => 8,
                 'images' => [
-                    'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800'
+                    'images/products/oak_wall_mirror_1788435994394.jpg'
                 ]
             ],
 
@@ -101,7 +98,7 @@ class ProductSeeder extends Seeder
                 'dimensions' => '45cm x 22cm x 2.5cm',
                 'stock' => 30,
                 'images' => [
-                    'https://images.unsplash.com/photo-1590794056226-79ef3a8147e1?auto=format&fit=crop&q=80&w=800'
+                    'images/products/acacia_serving_board_1788436016648.jpg'
                 ]
             ],
             [
@@ -113,7 +110,7 @@ class ProductSeeder extends Seeder
                 'dimensions' => '28cm Diameter x 10cm Height',
                 'stock' => 12,
                 'images' => [
-                    'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800'
+                    'images/products/olive_wood_bowl_1788436044401.jpg'
                 ]
             ],
 
@@ -127,7 +124,7 @@ class ProductSeeder extends Seeder
                 'dimensions' => '40cm Diameter x 35cm Height',
                 'stock' => 14,
                 'images' => [
-                    'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&q=80&w=800'
+                    'images/products/zen_pendant_light_1788436076183.jpg'
                 ]
             ],
             [
@@ -139,7 +136,7 @@ class ProductSeeder extends Seeder
                 'dimensions' => '25cm x 25cm x 52cm',
                 'stock' => 18,
                 'images' => [
-                    'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&q=80&w=800'
+                    'images/products/sheesham_table_lamp_1788436111166.jpg'
                 ]
             ],
 
@@ -153,7 +150,7 @@ class ProductSeeder extends Seeder
                 'dimensions' => '30cm x 30cm x 40cm',
                 'stock' => 22,
                 'images' => [
-                    'https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&q=80&w=800'
+                    'images/products/terracotta_floor_vase_1788436149939.jpg'
                 ]
             ],
             [
@@ -165,7 +162,7 @@ class ProductSeeder extends Seeder
                 'dimensions' => '24cm Diameter x 65cm Height',
                 'stock' => 9,
                 'images' => [
-                    'https://images.unsplash.com/photo-1612196808214-b7e239e5f6b7?auto=format&fit=crop&q=80&w=800'
+                    'images/products/terracotta_floor_vase_1788436149939.jpg'
                 ]
             ],
 
@@ -179,7 +176,7 @@ class ProductSeeder extends Seeder
                 'dimensions' => '60cm x 20cm x 4cm each',
                 'stock' => 16,
                 'images' => [
-                    'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&q=80&w=800'
+                    'images/products/oak_wall_mirror_1788435994394.jpg'
                 ]
             ],
             [
@@ -191,7 +188,7 @@ class ProductSeeder extends Seeder
                 'dimensions' => '35cm x 35cm x 45cm',
                 'stock' => 6,
                 'images' => [
-                    'https://images.unsplash.com/photo-1532372670776-806161270595?auto=format&fit=crop&q=80&w=800'
+                    'images/products/sheesham_table_lamp_1788436111166.jpg'
                 ]
             ],
         ];
@@ -218,17 +215,14 @@ class ProductSeeder extends Seeder
                 ]
             );
 
-            // Add images if not already attached
+            // Re-sync images
+            ProductImage::where('product_id', $product->id)->delete();
             foreach ($data['images'] as $index => $imageUrl) {
-                ProductImage::firstOrCreate(
-                    [
-                        'product_id' => $product->id,
-                        'image_path' => $imageUrl,
-                    ],
-                    [
-                        'is_primary' => ($index === 0),
-                    ]
-                );
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'image_path' => $imageUrl,
+                    'is_primary' => ($index === 0),
+                ]);
             }
         }
     }
