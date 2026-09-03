@@ -56,35 +56,44 @@ if ($isVercel) {
         }
     }
 
-    // Set up a temporary SQLite database
-    $dbPath = $storagePath . '/database.sqlite';
-    $sourceDb = $app->basePath('database/database.sqlite');
-    
-    if (!file_exists($dbPath)) {
-        if (file_exists($sourceDb)) {
-            copy($sourceDb, $dbPath);
-        } else {
-            touch($dbPath);
-            // Auto-migrate the fresh database so tables exist
-            // This prevents "no such table" errors on Vercel
-            // We must silence stdout to prevent header errors
-            $console = new \Symfony\Component\Console\Output\BufferedOutput();
-            $app->make(\Illuminate\Contracts\Console\Kernel::class)->call('migrate', ['--force' => true], $console);
+    $dbConn = env('DB_CONNECTION', 'sqlite');
+    $hasPostgres = ($dbConn === 'pgsql') || env('DB_URL') || env('DATABASE_URL') || env('POSTGRES_URL');
+
+    // Only fallback to ephemeral SQLite if PostgreSQL is NOT configured
+    if (!$hasPostgres) {
+        $dbPath = $storagePath . '/database.sqlite';
+        $sourceDb = $app->basePath('database/database.sqlite');
+        
+        $needSeeding = false;
+        if (!file_exists($dbPath)) {
+            if (file_exists($sourceDb) && filesize($sourceDb) > 0) {
+                copy($sourceDb, $dbPath);
+            } else {
+                touch($dbPath);
+                $needSeeding = true;
+            }
+        }
+        
+        $_ENV['DB_DATABASE'] = $dbPath;
+        putenv("DB_DATABASE={$dbPath}");
+
+        if ($needSeeding) {
+            try {
+                $console = new \Symfony\Component\Console\Output\BufferedOutput();
+                $kernel = $app->make(\Illuminate\Contracts\Console\Kernel::class);
+                $kernel->call('migrate', ['--force' => true], $console);
+                $kernel->call('db:seed', ['--force' => true], $console);
+            } catch (\Throwable $e) {
+                // Silence migration/seeding exceptions on initial boot
+            }
         }
     }
-    
-    // Override database configuration to use the temp file
-    // Check if configuration is already loaded, if not set env var
-    $_ENV['DB_DATABASE'] = $dbPath;
-    putenv("DB_DATABASE={$dbPath}");
 
-    // Force non-database drivers for Vercel to avoid "table not found" errors
-    // since we can't run migrations on the ephemeral SQLite DB.
-    $_ENV['SESSION_DRIVER'] = 'cookie';
-    putenv('SESSION_DRIVER=cookie');
+    $_ENV['SESSION_DRIVER'] = env('SESSION_DRIVER', 'cookie');
+    putenv('SESSION_DRIVER=' . env('SESSION_DRIVER', 'cookie'));
 
-    $_ENV['CACHE_STORE'] = 'array';
-    putenv('CACHE_STORE=array');
+    $_ENV['CACHE_STORE'] = env('CACHE_STORE', 'array');
+    putenv('CACHE_STORE=' . env('CACHE_STORE', 'array'));
 }
 
 return $app;
