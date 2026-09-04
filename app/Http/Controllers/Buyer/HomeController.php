@@ -11,27 +11,9 @@ class HomeController extends Controller
 {
     public function index()
     {
-        try {
-            $categories = Category::all();
-            $featuredProducts = Product::with('primaryImage', 'category')->latest()->take(8)->get();
+        $categories = Category::all();
+        $featuredProducts = Product::with('primaryImage', 'category')->latest()->take(8)->get();
 
-            if ($categories->isEmpty() || $featuredProducts->isEmpty()) {
-                \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-                \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
-                $categories = Category::all();
-                $featuredProducts = Product::with('primaryImage', 'category')->latest()->take(8)->get();
-            }
-        } catch (\Throwable $e) {
-            try {
-                \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-                \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
-                $categories = Category::all();
-                $featuredProducts = Product::with('primaryImage', 'category')->latest()->take(8)->get();
-            } catch (\Throwable $ex) {
-                $featuredProducts = collect();
-                $categories = collect();
-            }
-        }
         return view('buyer.home', compact('featuredProducts', 'categories'));
     }
 
